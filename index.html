@@ -24,6 +24,16 @@
             --white: #ffffff;
             --text-dark: #333333;
             --text-light: #666666;
+            --gold: #D4AF37;
+            /* Responsive breakpoints */
+            --bp-phone: 576px;
+            --bp-tablet: 768px;
+            --bp-desktop: 992px;
+
+            /* Component size tokens that can adapt with media queries */
+            --container-max: 1200px;
+            --attorney-image-height: 250px; /* default (desktop) */
+            --modal-image-height: 300px;
         }
 
         body {
@@ -34,9 +44,12 @@
             overflow-x: hidden;
         }
 
+        /* Fluid base font sizing for better scaling across devices */
+        html { font-size: 16px; }
+
         .container {
             width: 90%;
-            max-width: 1200px;
+            max-width: var(--container-max);
             margin: 0 auto;
             padding: 0 15px;
         }
@@ -119,20 +132,51 @@
 
         /* Header Styles */
         header {
-            background-color: var(--white);
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(90deg, rgba(3,10,60,0.95), rgba(10,20,60,0.95));
+            color: var(--white);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
+            /* animate transform + opacity for smooth hide/show on scroll */
+            transform: translateZ(0); /* promote to its own layer for smoother animation */
+            transition: transform 0.35s ease, opacity 0.35s ease, padding 0.25s ease, box-shadow 0.25s ease;
+            box-shadow: 0 8px 30px rgba(3,10,30,0.45);
+            border-bottom: 2px solid rgba(212,175,55,0.08);
+            will-change: transform, opacity;
+        }
+
+        .header-top {
+            background: linear-gradient(90deg, var(--navy-dark), rgba(10,10,40,0.95));
+            color: var(--silver-light);
+            font-size: 0.9rem;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .header-top .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-top a { color: var(--silver-light); text-decoration: none; }
+
+        .header-top .badge {
+            background: linear-gradient(90deg, var(--gold), #b78d21);
+            color: #111;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            margin-left: 8px;
+            font-size: 0.8rem;
         }
 
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
+            padding: 16px 0;
         }
 
         .logo {
@@ -148,21 +192,24 @@
 
         .logo-text {
             font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--navy);
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: 0.4px;
         }
 
         .logo-tagline {
             font-size: 0.8rem;
-            color: var(--silver-dark);
-            margin-left: 10px;
-            border-left: 1px solid var(--silver);
-            padding-left: 10px;
+            color: rgba(255,255,255,0.85);
+            margin-left: 12px;
+            border-left: 1px solid rgba(255,255,255,0.06);
+            padding-left: 12px;
         }
 
         nav ul {
             display: flex;
             list-style: none;
+            align-items: center;
+            gap: 22px;
         }
 
         nav ul li {
@@ -171,10 +218,11 @@
 
         nav ul li a {
             text-decoration: none;
-            color: var(--navy);
+            color: rgba(255,255,255,0.95);
             font-weight: 600;
-            transition: color 0.3s;
+            transition: color 0.25s ease;
             position: relative;
+            padding: 6px 8px;
         }
 
         nav ul li a::after {
@@ -196,20 +244,49 @@
             display: none;
             background: none;
             border: none;
-            font-size: 1.5rem;
-            color: var(--navy);
+            font-size: 1.4rem;
+            color: rgba(255,255,255,0.95);
             cursor: pointer;
+        }
+
+        /* Prominent CTA inside header */
+        .header-cta {
+            background: linear-gradient(90deg, var(--gold), #b78d21);
+            color: #111;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 700;
+            box-shadow: 0 6px 18px rgba(212,175,55,0.18);
+            text-decoration: none;
+            margin-right: 16px;
+        }
+
+        .header-cta:hover { transform: translateY(-2px); }
+
+        /* Hidden state applied while scrolling down: slide up and fade */
+        .header-hidden {
+            transform: translateY(-100%) translateZ(0);
+            opacity: 0;
+            pointer-events: none; /* avoid accidental clicks when hidden */
+        }
+
+        /* apply transition class after load to avoid initial layout jump on some browsers */
+        .header-transition {
+            transition: transform 0.35s ease, opacity 0.35s ease, padding 0.25s ease, box-shadow 0.25s ease;
         }
 
         /* Hero Section */
         .hero {
             background: linear-gradient(rgba(0, 0, 128, 0.85), rgba(0, 0, 128, 0.8)), url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') no-repeat center center/cover;
-            height: 100vh;
+            /* Use min-height and let content flow on small screens */
+            min-height: 60vh;
+            height: auto;
             display: flex;
             align-items: center;
             text-align: center;
             color: var(--white);
             margin-top: 70px;
+            padding: 60px 0;
         }
 
         .hero-content {
@@ -314,6 +391,7 @@
             text-align: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease;
+            cursor: pointer;
         }
 
         .stat-card:hover {
@@ -348,6 +426,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .practice-area-card::before {
@@ -396,7 +475,7 @@
         }
 
         .attorney-image {
-            height: 300px;
+            height: var(--attorney-image-height);
             background: linear-gradient(45deg, var(--navy), var(--navy-light));
             display: flex;
             align-items: center;
@@ -406,6 +485,7 @@
             overflow: hidden;
         }
 
+        /* placeholder background (kept for cards without an <img>) */
         .attorney-image::before {
             content: '';
             position: absolute;
@@ -415,6 +495,23 @@
             height: 100%;
             background: url('https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80') no-repeat center center/cover;
             opacity: 0.8;
+            z-index: 0; /* keep behind real <img> elements */
+        }
+
+        /* Ensure any <img> used for attorney photos fills the container and sits above the placeholder.
+           Use a face-friendly default object-position (center, slightly above center) so faces are visible.
+           Individual images can override by adding a data-focus attribute (e.g. data-focus="50% 20%"). */
+        .attorney-image img,
+        .attorney-card > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* default focal area: horizontally centered, vertically 25% from top (shows faces) */
+            object-position: 50% 25%;
+            display: block;
+            position: relative;
+            z-index: 1;
+            transition: object-position 250ms ease, transform 250ms ease;
         }
 
         .attorney-info {
@@ -444,6 +541,12 @@
             max-width: 800px;
             margin: 0 auto;
             position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial-slider {
+            display: flex;
+            transition: transform 0.5s ease;
         }
 
         .testimonial-slide {
@@ -453,6 +556,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             text-align: center;
             margin: 0 20px;
+            min-width: 100%;
         }
 
         .testimonial-text {
@@ -732,6 +836,93 @@
             transform: translateY(-3px);
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1100;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--navy);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--silver);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            background-color: var(--silver-light);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--navy);
+            font-weight: bold;
+        }
+
+        /* Ensure images placed directly in modal bodies fit like .modal-image */
+        .modal-body > img,
+        .modal-image img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            object-position: 50% 25%; /* face-friendly default */
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .booking-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .booking-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .booking-form .full-width {
+            grid-column: 1 / -1;
+        }
+
         /* Responsive Styles */
         @media (max-width: 992px) {
             .about-content {
@@ -745,6 +936,16 @@
             .contact-container {
                 grid-template-columns: 1fr;
             }
+            
+            .booking-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Tablet and below adjustments */
+        @media (max-width: 992px) {
+            :root { --attorney-image-height: 220px; --modal-image-height: 260px; }
+            .hero { min-height: 70vh; padding: 50px 0; }
         }
 
         @media (max-width: 768px) {
@@ -791,6 +992,10 @@
                 right: 20px;
             }
             
+            .desktop-menu {
+                display: none;
+            }
+            
             .mobile-menu {
                 display: none;
                 width: 100%;
@@ -809,12 +1014,6 @@
             .mobile-menu ul li {
                 margin: 10px 0;
             }
-        }
-
-        @media (max-width: 576px) {
-            section {
-                padding: 70px 0;
-            }
             
             .stats-container {
                 grid-template-columns: 1fr;
@@ -824,18 +1023,47 @@
             .attorneys-grid {
                 grid-template-columns: 1fr;
             }
+
+            /* hide top strip on small screens to save space */
+            .header-top { display: none; }
+
+            /* make CTA smaller on mobile */
+            .header-cta { display: none; }
+
+            /* Phone adjustments */
+            :root { --attorney-image-height: 180px; --modal-image-height: 200px; }
+            .hero { min-height: 55vh; padding: 40px 0; }
+        }
+
+        @media (max-width: 576px) {
+            section {
+                padding: 70px 0;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header id="header">
+        <!-- Premium top info strip -->
+        <div class="header-top">
+            <div class="container">
+                <div class="top-left">Call us: <a href="tel:+15556413778">(055) 641-3778</a> &nbsp;|&nbsp; <a href="mailto:info@lexprimelegal.com">info@lexprimelegal.com</a></div>
+                <div class="top-right">Free 15-min consultation &nbsp;<span class="badge">Trusted</span></div>
+            </div>
+        </div>
         <div class="container header-container">
             <div class="logo">
                 <i class="fas fa-balance-scale logo-icon"></i>
                 <div class="logo-text">LexPrime Legal Group</div>
                 <div class="logo-tagline">Strategic Legal Counsel</div>
             </div>
+            <a href="#contact" class="btn header-cta">Book Consultation</a>
             <button class="mobile-menu-btn" id="mobileMenuBtn">
                 <i class="fas fa-bars"></i>
             </button>
@@ -894,19 +1122,19 @@
             </div>
             
             <div class="stats-container">
-                <div class="stat-card">
+                <div class="stat-card" id="stat-years">
                     <div class="stat-number">15+</div>
                     <div class="stat-text">Years of Experience</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" id="stat-cases">
                     <div class="stat-number">500+</div>
                     <div class="stat-text">Cases Handled Annually</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" id="stat-satisfaction">
                     <div class="stat-number">98%</div>
                     <div class="stat-text">Client Satisfaction Rate</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" id="stat-trials">
                     <div class="stat-number">50+</div>
                     <div class="stat-text">Successful Trials</div>
                 </div>
@@ -921,32 +1149,32 @@
             <p class="section-subtitle">We offer comprehensive legal services across multiple practice areas, providing our clients with the expertise they need for their specific legal challenges.</p>
             
             <div class="practice-areas-grid">
-                <div class="practice-area-card">
+                <div class="practice-area-card" data-area="family">
                     <div class="practice-area-icon"><i class="fas fa-heart"></i></div>
                     <h3>Family Law</h3>
                     <p>Comprehensive legal services for divorce, child custody, adoption, prenuptial agreements, and other family-related matters with compassion and expertise.</p>
                 </div>
-                <div class="practice-area-card">
+                <div class="practice-area-card" data-area="corporate">
                     <div class="practice-area-icon"><i class="fas fa-building"></i></div>
                     <h3>Corporate Law</h3>
                     <p>Strategic counsel for businesses of all sizes, including formation, contracts, mergers, acquisitions, intellectual property, and compliance matters.</p>
                 </div>
-                <div class="practice-area-card">
+                <div class="practice-area-card" data-area="real-estate">
                     <div class="practice-area-icon"><i class="fas fa-home"></i></div>
                     <h3>Real Estate Law</h3>
                     <p>Expert guidance on residential and commercial real estate transactions, leasing, zoning, property disputes, and development projects.</p>
                 </div>
-                <div class="practice-area-card">
+                <div class="practice-area-card" data-area="criminal">
                     <div class="practice-area-icon"><i class="fas fa-gavel"></i></div>
                     <h3>Criminal Defense</h3>
                     <p>Aggressive defense representation for individuals facing criminal charges, protecting rights and seeking favorable outcomes through negotiation or trial.</p>
                 </div>
-                <div class="practice-area-card">
+                <div class="practice-area-card" data-area="personal-injury">
                     <div class="practice-area-icon"><i class="fas fa-user-injured"></i></div>
                     <h3>Personal Injury</h3>
                     <p>Dedicated representation for victims of accidents, medical malpractice, and wrongful death, fighting for the compensation you deserve.</p>
                 </div>
-                <div class="practice-area-card">
+                <div class="practice-area-card" data-area="estate-planning">
                     <div class="practice-area-icon"><i class="fas fa-file-contract"></i></div>
                     <h3>Estate Planning</h3>
                     <p>Comprehensive estate planning services including wills, trusts, powers of attorney, and probate administration to protect your legacy.</p>
@@ -968,7 +1196,7 @@
             <div class="attorneys-grid">
                 <div class="attorney-card">
                     <div class="attorney-image">
-                        Sarah Johnson
+                        <img src="https://ivyandnormanton.com/cdn/shop/files/2D5A9045copy.jpg?v=1688391706&width=533" alt="Sarah Johnson">
                     </div>
                     <div class="attorney-info">
                         <h3>Sarah Johnson</h3>
@@ -981,12 +1209,14 @@
                             <a href="#"><i class="fas fa-envelope"></i></a>
                         </div>
                         <button class="btn btn-secondary read-bio" data-attorney="sarah">Read Bio</button>
+                        <button class="btn contact-attorney" data-attorney="sarah">Contact Attorney</button>
                     </div>
                 </div>
                 <div class="attorney-card">
                     <div class="attorney-image">
-                        Michael Rodriguez
+                        <img src="https://media.istockphoto.com/id/471349650/photo/portrait-of-lawyer-in-court-holding-brief-and-book.jpg?s=612x612&w=0&k=20&c=jNK8DfX1X7xJ1NNJvKoNiaxq5kKd5XOXr60RLc9J7Z0=" alt="Michael Rodriguez">
                     </div>
+
                     <div class="attorney-info">
                         <h3>Michael Rodriguez</h3>
                         <p>Senior Partner</p>
@@ -998,14 +1228,15 @@
                             <a href="#"><i class="fas fa-envelope"></i></a>
                         </div>
                         <button class="btn btn-secondary read-bio" data-attorney="michael">Read Bio</button>
+                        <button class="btn contact-attorney" data-attorney="michael">Contact Attorney</button>
                     </div>
                 </div>
                 <div class="attorney-card">
                     <div class="attorney-image">
-                        Emily Chen
+                        <img src="https://edwardasare.com/wp-content/uploads/2021/08/C151DD49-2550-41E1-AB4C-14842EE13E68-1.jpeg" alt="Emily Owusu">
                     </div>
                     <div class="attorney-info">
-                        <h3>Emily Chen</h3>
+                        <h3>Emily Owusu</h3>
                         <p>Partner</p>
                         <p>Family Law Specialist</p>
                         <p>Stanford Law School, J.D.</p>
@@ -1015,11 +1246,12 @@
                             <a href="#"><i class="fas fa-envelope"></i></a>
                         </div>
                         <button class="btn btn-secondary read-bio" data-attorney="emily">Read Bio</button>
+                        <button class="btn contact-attorney" data-attorney="emily">Contact Attorney</button>
                     </div>
                 </div>
                 <div class="attorney-card">
                     <div class="attorney-image">
-                        David Thompson
+                        <img src="https://shop.edeandravenscroft.com/cdn/shop/files/CALLNIGHTBlock1.jpg?v=1713815503&width=1300" alt="David Thompson">
                     </div>
                     <div class="attorney-info">
                         <h3>David Thompson</h3>
@@ -1032,6 +1264,7 @@
                             <a href="#"><i class="fas fa-envelope"></i></a>
                         </div>
                         <button class="btn btn-secondary read-bio" data-attorney="david">Read Bio</button>
+                        <button class="btn contact-attorney" data-attorney="david">Contact Attorney</button>
                     </div>
                 </div>
             </div>
@@ -1049,18 +1282,34 @@
             <p class="section-subtitle">Hear what our clients have to say about their experience working with LexPrime Legal Group.</p>
             
             <div class="testimonials-container">
-                <div class="testimonial-slide active">
-                    <div class="testimonial-text">
-                        LexPrime Legal Group provided exceptional representation during my complex divorce proceedings. Their expertise and compassion made a difficult process much more manageable. I couldn't have asked for better legal counsel.
+                <div class="testimonial-slider" id="testimonialSlider">
+                    <div class="testimonial-slide active">
+                        <div class="testimonial-text">
+                            LexPrime Legal Group provided exceptional representation during my complex divorce proceedings. Their expertise and compassion made a difficult process much more manageable. I couldn't have asked for better legal counsel.
+                        </div>
+                        <div class="testimonial-author">Jennifer Martinez</div>
+                        <div class="testimonial-role">CEO, TechSolutions Inc.</div>
                     </div>
-                    <div class="testimonial-author">Jennifer Martinez</div>
-                    <div class="testimonial-role">CEO, TechSolutions Inc.</div>
+                    <div class="testimonial-slide">
+                        <div class="testimonial-text">
+                            When our company faced a major intellectual property dispute, the team at LexPrime demonstrated incredible strategic thinking and negotiation skills. They secured a favorable settlement that protected our business interests.
+                        </div>
+                        <div class="testimonial-author">Robert Williams</div>
+                        <div class="testimonial-role">Founder, Innovate Labs</div>
+                    </div>
+                    <div class="testimonial-slide">
+                        <div class="testimonial-text">
+                            I was falsely accused of a serious crime, and Michael Rodriguez fought tirelessly for my innocence. His dedication and legal expertise resulted in all charges being dropped. I owe him my freedom and my future.
+                        </div>
+                        <div class="testimonial-author">James Peterson</div>
+                        <div class="testimonial-role">Small Business Owner</div>
+                    </div>
                 </div>
                 
                 <div class="testimonial-nav">
-                    <div class="testimonial-dot active"></div>
-                    <div class="testimonial-dot"></div>
-                    <div class="testimonial-dot"></div>
+                    <div class="testimonial-dot active" data-slide="0"></div>
+                    <div class="testimonial-dot" data-slide="1"></div>
+                    <div class="testimonial-dot" data-slide="2"></div>
                 </div>
             </div>
         </div>
@@ -1085,7 +1334,7 @@
                         <div class="contact-icon"><i class="fas fa-phone"></i></div>
                         <div class="contact-details">
                             <h4>Phone</h4>
-                            <p>(212) 555-1234</p>
+                            <p>(055) 641-3778</p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -1230,6 +1479,116 @@
         <i class="fas fa-chevron-up"></i>
     </div>
 
+    <!-- Modal for Statistics -->
+    <div class="modal" id="statModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeStatModal">&times;</span>
+            <div class="modal-header">
+                <h2 id="statModalTitle">Firm Achievement</h2>
+            </div>
+            <div class="modal-body">
+                <img src="https://i0.wp.com/conferencecatalysts.com/wp-content/uploads/2023/09/inc-5000-logo1-04.png?fit=800%2C463&ssl=1" alt="Sarah Johnson">
+
+                <div id="statModalContent">
+                    <!-- Content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Practice Areas -->
+    <div class="modal" id="practiceModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closePracticeModal">&times;</span>
+            <div class="modal-header">
+                <h2 id="practiceModalTitle">Practice Area</h2>
+            </div>
+            <div class="modal-body">
+                <div class="modal-image" id="practiceModalImage">
+                    Practice Area Image
+                </div>
+                <div id="practiceModalContent">
+                    <!-- Content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Attorney Bio -->
+    <div class="modal" id="attorneyModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeAttorneyModal">&times;</span>
+            <div class="modal-header">
+                <h2 id="attorneyModalTitle">Attorney Profile</h2>
+            </div>
+            <div class="modal-body">
+                 <img src="https://ohiocapitaljournal.com/wp-content/uploads/2022/10/SCOTUS1-2048x1365.jpeg" alt="Sarah Johnson">
+
+                <div id="attorneyModalContent">
+                    <!-- Content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Booking -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeBookingModal">&times;</span>
+            <div class="modal-header">
+                <h2 id="bookingModalTitle">Schedule Consultation</h2>
+            </div>
+            <div class="modal-body">
+                <form class="booking-form" id="bookingForm">
+                    <div class="form-group">
+                        <label for="booking-name">Full Name *</label>
+                        <input type="text" id="booking-name" name="booking-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="booking-email">Email Address *</label>
+                        <input type="email" id="booking-email" name="booking-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="booking-phone">Phone Number *</label>
+                        <input type="tel" id="booking-phone" name="booking-phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="booking-attorney">Preferred Attorney</label>
+                        <select id="booking-attorney" name="booking-attorney">
+                            <option value="">Any Available Attorney</option>
+                            <option value="sarah">Sarah Johnson</option>
+                            <option value="michael">Michael Rodriguez</option>
+                            <option value="emily">Emily Chen</option>
+                            <option value="david">David Thompson</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="booking-date">Preferred Date *</label>
+                        <input type="date" id="booking-date" name="booking-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="booking-time">Preferred Time *</label>
+                        <select id="booking-time" name="booking-time" required>
+                            <option value="">Select a time</option>
+                            <option value="9:00 AM">9:00 AM</option>
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="1:00 PM">1:00 PM</option>
+                            <option value="2:00 PM">2:00 PM</option>
+                            <option value="3:00 PM">3:00 PM</option>
+                            <option value="4:00 PM">4:00 PM</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="booking-notes">Case Details</label>
+                        <textarea id="booking-notes" name="booking-notes" placeholder="Briefly describe your legal matter..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-large full-width">Schedule Consultation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -1269,15 +1628,54 @@
             });
         });
 
-        // Header scroll effect
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('header');
-            if (window.scrollY > 100) {
+        // Header scroll effect + hide-on-scroll behavior
+        const header = document.getElementById('header');
+        let lastScrollY = window.scrollY || 0;
+        let ticking = false;
+        const SCROLL_DELTA = 10; // minimum delta before toggling hide/show
+
+        function handleHeaderOnScroll(currentScroll) {
+            // shrink header when scrolled past threshold
+            if (currentScroll > 100) {
                 header.style.padding = '5px 0';
                 header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
             } else {
                 header.style.padding = '15px 0';
                 header.style.boxShadow = '0 2px 15px rgba(0, 0, 0, 0.1)';
+            }
+
+            // hide on scroll down, show on scroll up
+            const scrolledDown = currentScroll > lastScrollY + SCROLL_DELTA;
+            const scrolledUp = currentScroll < lastScrollY - SCROLL_DELTA;
+
+            // don't hide when near the top of the page
+            if (currentScroll < 60) {
+                header.classList.remove('header-hidden');
+            } else if (scrolledDown && currentScroll > 150) {
+                header.classList.add('header-hidden');
+            } else if (scrolledUp) {
+                header.classList.remove('header-hidden');
+            }
+        }
+
+        window.addEventListener('scroll', function() {
+            const current = window.scrollY || 0;
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    handleHeaderOnScroll(current);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+            lastScrollY = current;
+        });
+
+        // Ensure the header transition class is applied after load so the
+        // browser doesn't animate the header immediately during page render.
+        window.addEventListener('load', function() {
+            if (header) {
+                // small timeout to allow layout to settle on slow devices
+                setTimeout(() => header.classList.add('header-transition'), 40);
             }
         });
 
@@ -1362,50 +1760,369 @@
             }
         });
 
-        // Attorney bio buttons
+        // Statistics Modal
+        const statModal = document.getElementById('statModal');
+        const closeStatModal = document.getElementById('closeStatModal');
+        const statModalTitle = document.getElementById('statModalTitle');
+        const statModalImage = document.getElementById('statModalImage');
+        const statModalContent = document.getElementById('statModalContent');
+        
+        // Statistic data
+        const statData = {
+            'stat-years': {
+                title: '15+ Years of Excellence',
+                content: `<p>Since our founding in 2005, LexPrime Legal Group has established itself as a premier law firm in New York City. Over these 15+ years, we have:</p>
+                <ul>
+                    <li>Successfully represented over 5,000 clients</li>
+                    <li>Expanded from a single office to three locations across New York</li>
+                    <li>Grown our team from 3 to 25 dedicated legal professionals</li>
+                    <li>Developed specialized expertise across 6 major practice areas</li>
+                    <li>Maintained an A+ rating with the Better Business Bureau</li>
+                </ul>
+                <p>Our longevity in the legal field is a testament to our commitment to client success and our ability to adapt to the evolving legal landscape.</p>`
+            },
+            'stat-cases': {
+                title: '500+ Cases Handled Annually',
+                content: `<p>Our firm manages a diverse portfolio of over 500 cases each year, demonstrating our capacity and expertise in handling complex legal matters across multiple practice areas.</p>
+                <p><strong>Case Distribution (Annual):</strong></p>
+                <ul>
+                    <li>Corporate Law: 120+ cases</li>
+                    <li>Family Law: 150+ cases</li>
+                    <li>Real Estate Law: 100+ cases</li>
+                    <li>Criminal Defense: 80+ cases</li>
+                    <li>Personal Injury: 40+ cases</li>
+                    <li>Estate Planning: 30+ cases</li>
+                </ul>
+                <p>This volume of cases allows us to maintain current knowledge of legal precedents and develop innovative strategies that benefit all our clients.</p>`
+            },
+            'stat-satisfaction': {
+                title: '98% Client Satisfaction Rate',
+                content: `<p>Our exceptional 98% client satisfaction rate reflects our unwavering commitment to providing outstanding legal services and building lasting relationships with our clients.</p>
+                <p><strong>Client Feedback Highlights:</strong></p>
+                <ul>
+                    <li>95% of clients would recommend our firm to others</li>
+                    <li>97% rated our communication as excellent or very good</li>
+                    <li>96% were satisfied with their case outcomes</li>
+                    <li>94% felt their attorneys demonstrated genuine care for their situation</li>
+                </ul>
+                <p>We achieve these results through personalized attention, clear communication, and strategic legal counsel tailored to each client's unique circumstances.</p>`
+            },
+            'stat-trials': {
+                title: '50+ Successful Trials',
+                content: `<p>With over 50 successful trial outcomes, our litigation team has demonstrated exceptional skill in the courtroom, achieving favorable verdicts for our clients in complex legal disputes.</p>
+                <p><strong>Notable Trial Achievements:</strong></p>
+                <ul>
+                    <li>Secured a $15M verdict in a corporate fraud case</li>
+                    <li>Won acquittal in a high-profile criminal defense case</li>
+                    <li>Successfully defended a Fortune 500 company in a landmark intellectual property dispute</li>
+                    <li>Achieved precedent-setting rulings in family law and real estate cases</li>
+                </ul>
+                <p>Our trial success rate of 92% far exceeds the national average, demonstrating our effectiveness in litigation strategy and courtroom presentation.</p>`
+            }
+        };
+        
+        // Add click events to stat cards
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const statId = this.id;
+                if (statData[statId]) {
+                    statModalTitle.textContent = statData[statId].title;
+                    statModalContent.innerHTML = statData[statId].content;
+                    statModal.style.display = 'block';
+                }
+            });
+        });
+        
+        closeStatModal.addEventListener('click', function() {
+            statModal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', function(e) {
+            if (e.target === statModal) {
+                statModal.style.display = 'none';
+            }
+        });
+
+        // Practice Areas Modal
+        const practiceModal = document.getElementById('practiceModal');
+        const closePracticeModal = document.getElementById('closePracticeModal');
+        const practiceModalTitle = document.getElementById('practiceModalTitle');
+        const practiceModalImage = document.getElementById('practiceModalImage');
+        const practiceModalContent = document.getElementById('practiceModalContent');
+        
+        // Practice area data
+        const practiceData = {
+            'family': {
+                title: 'Family Law',
+                content: `<p>Our Family Law practice provides compassionate yet strategic legal guidance through life's most challenging transitions. We understand that family legal matters are often emotionally charged and require both legal expertise and personal sensitivity.</p>
+                <p><strong>Services Include:</strong></p>
+                <ul>
+                    <li>Divorce and legal separation</li>
+                    <li>Child custody and visitation arrangements</li>
+                    <li>Child and spousal support</li>
+                    <li>Prenuptial and postnuptial agreements</li>
+                    <li>Adoption and guardianship</li>
+                    <li>Domestic violence protection</li>
+                    <li>Property division and equitable distribution</li>
+                </ul>
+                <p>Our approach combines aggressive advocacy when necessary with mediation and collaborative law techniques to achieve the best possible outcomes while minimizing conflict.</p>`
+            },
+            'corporate': {
+                title: 'Corporate Law',
+                content: `<p>Our Corporate Law practice provides comprehensive legal services to businesses of all sizes, from startups to established corporations. We serve as strategic partners to our business clients, helping them navigate complex legal landscapes while pursuing growth opportunities.</p>
+                <p><strong>Services Include:</strong></p>
+                <ul>
+                    <li>Business formation and structuring</li>
+                    <li>Contract drafting and negotiation</li>
+                    <li>Mergers and acquisitions</li>
+                    <li>Intellectual property protection</li>
+                    <li>Corporate governance and compliance</li>
+                    <li>Employment law matters</li>
+                    <li>Commercial litigation</li>
+                </ul>
+                <p>We take a proactive approach to corporate law, helping clients identify potential legal issues before they become problems and positioning them for sustainable growth.</p>`
+            },
+            'real-estate': {
+                title: 'Real Estate Law',
+                content: `<p>Our Real Estate Law practice provides expert guidance on all aspects of property transactions and disputes. With the New York real estate market being particularly complex, our attorneys bring specialized knowledge to both residential and commercial matters.</p>
+                <p><strong>Services Include:</strong></p>
+                <ul>
+                    <li>Residential and commercial purchases/sales</li>
+                    <li>Lease agreements and negotiations</li>
+                    <li>Zoning and land use approvals</li>
+                    <li>Property development and construction law</li>
+                    <li>Title examination and insurance</li>
+                    <li>Real estate financing and mortgage issues</li>
+                    <li>Landlord-tenant disputes</li>
+                </ul>
+                <p>We have successfully closed transactions ranging from modest apartments to multi-million dollar commercial properties, always ensuring our clients' interests are protected.</p>`
+            },
+            'criminal': {
+                title: 'Criminal Defense',
+                content: `<p>Our Criminal Defense practice provides aggressive, strategic representation for individuals facing criminal charges. We understand that a criminal accusation can have life-altering consequences, and we fight tirelessly to protect our clients' rights, freedom, and future.</p>
+                <p><strong>Services Include:</strong></p>
+                <ul>
+                    <li>Felony and misdemeanor defense</li>
+                    <li>DUI/DWI representation</li>
+                    <li>Drug offenses</li>
+                    <li>White-collar crimes</li>
+                    <li>Theft and property crimes</li>
+                    <li>Assault and violent crimes</li>
+                    <li>Appeals and post-conviction relief</li>
+                </ul>
+                <p>Our approach combines thorough investigation, strategic motion practice, and skilled negotiation with prosecutors. When necessary, we are prepared to take cases to trial with compelling courtroom advocacy.</p>
+                <p><strong>Recent Success:</strong> Last year, we achieved dismissals or favorable plea agreements in 85% of our criminal cases, with 15% proceeding to trial resulting in acquittals or significantly reduced charges.</p>`
+            },
+            'personal-injury': {
+                title: 'Personal Injury',
+                content: `<p>Our Personal Injury practice is dedicated to helping victims of accidents and negligence obtain the compensation they deserve. We understand the physical, emotional, and financial toll that injuries can take, and we fight to ensure our clients receive full and fair recovery.</p>
+                <p><strong>Services Include:</strong></p>
+                <ul>
+                    <li>Auto and truck accidents</li>
+                    <li>Medical malpractice</li>
+                    <li>Slip and fall accidents</li>
+                    <li>Workplace injuries</li>
+                    <li>Product liability</li>
+                    <li>Wrongful death claims</li>
+                    <li>Insurance disputes</li>
+                </ul>
+                <p>We work on a contingency fee basis, meaning you pay nothing unless we recover compensation for you. Our track record includes numerous six and seven-figure settlements and verdicts for our clients.</p>`
+            },
+            'estate-planning': {
+                title: 'Estate Planning',
+                content: `<p>Our Estate Planning practice helps individuals and families protect their assets and provide for their loved ones according to their wishes. We take a comprehensive approach to estate planning that considers both current circumstances and future possibilities.</p>
+                <p><strong>Services Include:</strong></p>
+                <ul>
+                    <li>Wills and trusts</li>
+                    <li>Powers of attorney</li>
+                    <li>Healthcare directives</li>
+                    <li>Estate and gift tax planning</li>
+                    <li>Probate and estate administration</li>
+                    <li>Special needs planning</li>
+                    <li>Business succession planning</li>
+                </ul>
+                <p>We work closely with clients to understand their unique family dynamics and financial situations, creating customized plans that provide peace of mind and protect legacies for future generations.</p>`
+            }
+        };
+        
+        // Add click events to practice area cards
+        document.querySelectorAll('.practice-area-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const area = this.getAttribute('data-area');
+                if (practiceData[area]) {
+                    practiceModalTitle.textContent = practiceData[area].title;
+                    practiceModalContent.innerHTML = practiceData[area].content;
+                    practiceModal.style.display = 'block';
+                }
+            });
+        });
+        
+        closePracticeModal.addEventListener('click', function() {
+            practiceModal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', function(e) {
+            if (e.target === practiceModal) {
+                practiceModal.style.display = 'none';
+            }
+        });
+
+        // Attorney Bio Modal
+        const attorneyModal = document.getElementById('attorneyModal');
+        const closeAttorneyModal = document.getElementById('closeAttorneyModal');
+        const attorneyModalTitle = document.getElementById('attorneyModalTitle');
+        const attorneyModalImage = document.getElementById('attorneyModalImage');
+        const attorneyModalContent = document.getElementById('attorneyModalContent');
+        
+        // Attorney data
+        const attorneyData = {
+            'sarah': {
+                name: 'Sarah Johnson',
+                title: 'Managing Partner',
+                content: `<p>Sarah Johnson is the Managing Partner of LexPrime Legal Group with over 20 years of experience in corporate law. She has successfully represented Fortune 500 companies in complex mergers and acquisitions, and has been recognized as one of New York's Top Corporate Lawyers for five consecutive years.</p>
+                <p><strong>Education:</strong></p>
+                <ul>
+                    <li>Harvard Law School, J.D., magna cum laude</li>
+                    <li>Yale University, B.A. in Economics, summa cum laude</li>
+                </ul>
+                <p><strong>Notable Achievements:</strong></p>
+                <ul>
+                    <li>Led the legal team in a $2.5 billion merger between two major tech companies</li>
+                    <li>Successfully defended a Fortune 100 company in a landmark antitrust case</li>
+                    <li>Named "Corporate Lawyer of the Year" by New York Legal Journal (2020)</li>
+                    <li>Regular speaker at national corporate law conferences</li>
+                </ul>
+                <p><strong>Bar Admissions:</strong> New York, Connecticut, U.S. Supreme Court</p>
+                <p>Sarah brings strategic vision to both her client work and firm leadership, ensuring that LexPrime maintains its position at the forefront of legal excellence.</p>`
+            },
+            'michael': {
+                name: 'Michael Rodriguez',
+                title: 'Senior Partner',
+                content: `<p>Michael Rodriguez is a Senior Partner specializing in criminal defense. With a background as a former prosecutor, he brings unique insight to his defense strategies. Michael has successfully defended clients in high-profile cases and has a remarkable track record of favorable outcomes.</p>
+                <p><strong>Education:</strong></p>
+                <ul>
+                    <li>Yale Law School, J.D.</li>
+                    <li>University of Chicago, B.A. in Political Science, with honors</li>
+                </ul>
+                <p><strong>Notable Achievements:</strong></p>
+                <ul>
+                    <li>Secured acquittal in a high-profile white-collar criminal case with potential 20-year sentence</li>
+                    <li>Successfully argued before the New York Court of Appeals, setting precedent for search and seizure law</li>
+                    <li>Named to "Super Lawyers" list for Criminal Defense every year since 2015</li>
+                    <li>Former Assistant District Attorney, New York County (8 years)</li>
+                </ul>
+                <p><strong>Bar Admissions:</strong> New York, New Jersey, U.S. District Courts for Southern and Eastern Districts of New York</p>
+                <p>Michael's unique perspective from both sides of the courtroom gives him exceptional insight into prosecution strategies, allowing him to develop effective defense approaches for his clients.</p>`
+            },
+            'emily': {
+                name: 'Emily Chen',
+                title: 'Partner',
+                content: `<p>Emily Chen is a Partner focusing on family law matters. Known for her compassionate yet strategic approach, Emily has helped hundreds of clients navigate difficult divorce and custody proceedings. She is a certified mediator and often helps clients resolve disputes outside of court.</p>
+                <p><strong>Education:</strong></p>
+                <ul>
+                    <li>Stanford Law School, J.D.</li>
+                    <li>University of California, Berkeley, B.A. in Psychology, magna cum laude</li>
+                </ul>
+                <p><strong>Notable Achievements:</strong></p>
+                <ul>
+                    <li>Successfully negotiated complex custody arrangements in high-conflict divorces</li>
+                    <li>Secured favorable property division in cases involving substantial assets</li>
+                    <li>Named "Rising Star" in Family Law by New York Magazine (2018-2021)</li>
+                    <li>Certified Family Law Specialist by the New York State Bar Association</li>
+                </ul>
+                <p><strong>Bar Admissions:</strong> New York, California</p>
+                <p>Emily believes that while family law matters can be emotionally challenging, they also present opportunities for clients to build positive new beginnings. She combines legal expertise with emotional intelligence to achieve outcomes that serve her clients' long-term wellbeing.</p>`
+            },
+            'david': {
+                name: 'David Thompson',
+                title: 'Partner',
+                content: `<p>David Thompson is a Partner with extensive experience in real estate law. He has facilitated multi-million dollar commercial real estate transactions and has successfully represented both developers and property owners in complex zoning and land use disputes.</p>
+                <p><strong>Education:</strong></p>
+                <ul>
+                    <li>Columbia Law School, J.D., Harlan Fiske Stone Scholar</li>
+                    <li>New York University, B.S. in Urban Planning, with distinction</li>
+                </ul>
+                <p><strong>Notable Achievements:</strong></p>
+                <ul>
+                    <li>Closed over $500 million in commercial real estate transactions in the past five years</li>
+                    <li>Successfully obtained zoning variances for major development projects</li>
+                    <li>Named one of "New York's Top Real Estate Attorneys" by Real Estate Weekly (2019-2022)</li>
+                    <li>Adjunct Professor of Real Estate Law at Fordham University School of Law</li>
+                </ul>
+                <p><strong>Bar Admissions:</strong> New York, U.S. District Court for the Southern District of New York</p>
+                <p>David's background in urban planning gives him unique insight into the regulatory and practical aspects of real estate development, allowing him to anticipate challenges and create innovative solutions for his clients.</p>`
+            }
+        };
+        
+        // Add click events to attorney bio buttons
         document.querySelectorAll('.read-bio').forEach(button => {
             button.addEventListener('click', function() {
                 const attorney = this.getAttribute('data-attorney');
-                let bioText = '';
-                
-                switch(attorney) {
-                    case 'sarah':
-                        bioText = "Sarah Johnson is the Managing Partner of LexPrime Legal Group with over 20 years of experience in corporate law. She has successfully represented Fortune 500 companies in complex mergers and acquisitions, and has been recognized as one of New York's Top Corporate Lawyers for five consecutive years.";
-                        break;
-                    case 'michael':
-                        bioText = "Michael Rodriguez is a Senior Partner specializing in criminal defense. With a background as a former prosecutor, he brings unique insight to his defense strategies. Michael has successfully defended clients in high-profile cases and has a remarkable track record of favorable outcomes.";
-                        break;
-                    case 'emily':
-                        bioText = "Emily Chen is a Partner focusing on family law matters. Known for her compassionate yet strategic approach, Emily has helped hundreds of clients navigate difficult divorce and custody proceedings. She is a certified mediator and often helps clients resolve disputes outside of court.";
-                        break;
-                    case 'david':
-                        bioText = "David Thompson is a Partner with extensive experience in real estate law. He has facilitated multi-million dollar commercial real estate transactions and has successfully represented both developers and property owners in complex zoning and land use disputes.";
-                        break;
-                    default:
-                        bioText = "Attorney bio information would be displayed here.";
+                if (attorneyData[attorney]) {
+                    attorneyModalTitle.textContent = `${attorneyData[attorney].name} - ${attorneyData[attorney].title}`;
+                    attorneyModalContent.innerHTML = attorneyData[attorney].content;
+                    attorneyModal.style.display = 'block';
                 }
-                
-                alert(bioText);
             });
+        });
+        
+        closeAttorneyModal.addEventListener('click', function() {
+            attorneyModal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', function(e) {
+            if (e.target === attorneyModal) {
+                attorneyModal.style.display = 'none';
+            }
+        });
+
+        // Booking Modal
+        const bookingModal = document.getElementById('bookingModal');
+        const closeBookingModal = document.getElementById('closeBookingModal');
+        const bookingModalTitle = document.getElementById('bookingModalTitle');
+        
+        // Add click events to contact attorney buttons
+        document.querySelectorAll('.contact-attorney').forEach(button => {
+            button.addEventListener('click', function() {
+                const attorney = this.getAttribute('data-attorney');
+                const attorneyName = attorneyData[attorney] ? attorneyData[attorney].name : 'an Attorney';
+                bookingModalTitle.textContent = `Schedule Consultation with ${attorneyName}`;
+                bookingModal.style.display = 'block';
+            });
+        });
+        
+        closeBookingModal.addEventListener('click', function() {
+            bookingModal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', function(e) {
+            if (e.target === bookingModal) {
+                bookingModal.style.display = 'none';
+            }
+        });
+        
+        // Booking form submission
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for scheduling a consultation! We will contact you shortly to confirm your appointment.');
+            bookingModal.style.display = 'none';
+            this.reset();
         });
 
         // Testimonial slider
+        const testimonialSlider = document.getElementById('testimonialSlider');
         const testimonialDots = document.querySelectorAll('.testimonial-dot');
         let currentTestimonial = 0;
         
         function showTestimonial(index) {
-            // Hide all testimonials
-            document.querySelectorAll('.testimonial-slide').forEach(slide => {
-                slide.classList.remove('active');
-            });
+            // Calculate translateX value
+            const translateX = -index * 100;
+            testimonialSlider.style.transform = `translateX(${translateX}%)`;
             
-            // Remove active class from all dots
+            // Update active dot
             testimonialDots.forEach(dot => {
                 dot.classList.remove('active');
             });
-            
-            // Show selected testimonial and activate corresponding dot
-            document.querySelectorAll('.testimonial-slide')[index].classList.add('active');
             testimonialDots[index].classList.add('active');
             
             currentTestimonial = index;
@@ -1418,6 +2135,39 @@
             });
         });
         
+        // Touch events for swiping on mobile
+        let startX = 0;
+        let endX = 0;
+        
+        testimonialSlider.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+        });
+        
+        testimonialSlider.addEventListener('touchend', function(e) {
+            endX = e.changedTouches[0].clientX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            
+            if (startX - endX > swipeThreshold) {
+                // Swipe left - next testimonial
+                let nextTestimonial = currentTestimonial + 1;
+                if (nextTestimonial >= testimonialDots.length) {
+                    nextTestimonial = 0;
+                }
+                showTestimonial(nextTestimonial);
+            } else if (endX - startX > swipeThreshold) {
+                // Swipe right - previous testimonial
+                let prevTestimonial = currentTestimonial - 1;
+                if (prevTestimonial < 0) {
+                    prevTestimonial = testimonialDots.length - 1;
+                }
+                showTestimonial(prevTestimonial);
+            }
+        }
+        
         // Auto-rotate testimonials
         setInterval(() => {
             let nextTestimonial = currentTestimonial + 1;
@@ -1425,8 +2175,20 @@
                 nextTestimonial = 0;
             }
             showTestimonial(nextTestimonial);
-        }, 5000);
+        }, 6000);
+
+        // --- Face-focused image support for attorney and modal photos ---
+        // If an <img> inside .attorney-image, .modal-image, or directly under .modal-body
+        // has a data-focus attribute (e.g. "50% 20%"), apply it to object-position so
+        // the face/focal point is visible. Otherwise apply a face-friendly default.
+        document.querySelectorAll('.attorney-image img, .modal-image img, .modal-body > img').forEach(img => {
+            const focus = img.getAttribute('data-focus');
+            if (focus) {
+                img.style.objectPosition = focus;
+            } else {
+                img.style.objectPosition = '50% 25%';
+            }
+        });
     </script>
 </body>
-
 </html>
